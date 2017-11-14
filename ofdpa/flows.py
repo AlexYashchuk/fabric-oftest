@@ -1675,7 +1675,7 @@ class _MplsTermination( base_tests.SimpleDataPlane ):
                 if config["switch_type"] != 'cvm':
                     add_mpls_flow( self.controller, ecmp_msg.group_id, mpls_label )
                 else:
-                    xp_add_mpls_flow( self.controller, ecmp_msg.group_id, mpls_label )
+                    cvm_add_mpls_flow( self.controller, ecmp_msg.group_id, mpls_label )
                 dst_ip = dip + (vlan_id << 8)
                 # add_unicast_routing_flow(self.controller, 0x0800, dst_ip, 0xffffff00,
                 #                         ecmp_msg.group_id, 1)
