@@ -1595,7 +1595,7 @@ class _MplsFwd( base_tests.SimpleDataPlane ):
                 if config["switch_type"] != 'xpliant':
                     add_mpls_flow( self.controller, mpls_label_gid, mpls_label, goto_table=29 )
                 else:
-                    xplinat_add_mpls_flow( self.controller, mpls_label_gid, mpls_label, goto_table=29 )
+                    xpliant_add_mpls_flow( self.controller, mpls_label_gid, mpls_label, goto_table=29 )
                 dst_ip = dip + (vlan_id << 8)
                 Groups._put( l2_gid )
                 Groups._put( mpls_gid )
