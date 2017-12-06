@@ -1592,10 +1592,10 @@ class _MplsFwd( base_tests.SimpleDataPlane ):
                 else:
                     add_termination_flow( self.controller, port, 0x8847, intf_src_mac, vlan_id, goto_table=24 )
                 #add_mpls_flow( self.controller, ecmp_gid, port, goto_table=29 )
-                if config["switch_type"] != 'cvm':
+                if config["switch_type"] != 'xpliant':
                     add_mpls_flow( self.controller, mpls_label_gid, mpls_label, goto_table=29 )
                 else:
-                    cmv_add_mpls_flow( self.controller, mpls_label_gid, mpls_label, goto_table=29 )
+                    xplinat_add_mpls_flow( self.controller, mpls_label_gid, mpls_label, goto_table=29 )
                 dst_ip = dip + (vlan_id << 8)
                 Groups._put( l2_gid )
                 Groups._put( mpls_gid )
@@ -1672,10 +1672,10 @@ class _MplsTermination( base_tests.SimpleDataPlane ):
                 else:
                     add_termination_flow( self.controller, port, 0x8847, intf_src_mac, vlan_id, goto_table=24 )
                 # add_mpls_flow(self.controller, label=port)
-                if config["switch_type"] != 'cvm':
+                if config["switch_type"] != 'xpliant':
                     add_mpls_flow( self.controller, ecmp_msg.group_id, mpls_label )
                 else:
-                    cvm_add_mpls_flow( self.controller, ecmp_msg.group_id, mpls_label )
+                    xpliant_add_mpls_flow( self.controller, ecmp_msg.group_id, mpls_label )
                 dst_ip = dip + (vlan_id << 8)
                 # add_unicast_routing_flow(self.controller, 0x0800, dst_ip, 0xffffff00,
                 #                         ecmp_msg.group_id, 1)
@@ -1705,7 +1705,7 @@ class _MplsTermination( base_tests.SimpleDataPlane ):
                     # build expect packet
                     mac_dst = '00:00:00:22:22:%02X' % (out_port)
 
-                    if config["switch_type"] != 'cvm':
+                    if config["switch_type"] != 'xpliant':
                         ip_ttl=31
                     else:
                         ip_ttl=64
@@ -2158,7 +2158,7 @@ class EcmpGroupMod( base_tests.SimpleDataPlane ):
                                          eth_dst=mac_dst, eth_src=switch_mac, ip_ttl=63, ip_src=ip_src,
                                          ip_dst=ip_dst,tcp_dport=tcp )
             # Expects packet on the input port
-            if config["switch_type"] != 'cvm':
+            if config["switch_type"] != 'xpliant':
                 pkt = str( exp_pkt )
                 verify_packet( self, pkt, ports[ 0 ] )
                 verify_no_other_packets( self )

@@ -717,7 +717,7 @@ def add_one_vlan_table_flow(ctrl, of_port, out_vlan_id=1, vlan_id=1, vrf=0, flag
         match.oxm_list.append(ofp.oxm.vlan_vid_masked(0x1000+vlan_id,0x1fff))
 
         actions=[]
-        if config["switch_type"] != 'cvm' and vrf!=0:
+        if config["switch_type"] != 'xpliant' and vrf!=0:
                 actions.append(ofp.action.set_field(ofp.oxm.exp2ByteValue(exp_type=1, value=vrf)))
 
         #actions.append(ofp.action.set_field(ofp.oxm.vlan_vid(value=vlan_id)))
@@ -1095,7 +1095,7 @@ def add_termination_flow(ctrl, in_port, eth_type, dst_mac, vlanid, goto_table=No
 def add_unicast_routing_flow(ctrl, eth_type, dst_ip, mask, action_group_id, vrf=0, send_ctrl=False, send_barrier=False, priority = 1):
     match = ofp.match()
     match.oxm_list.append(ofp.oxm.eth_type(eth_type))
-    if config["switch_type"] != 'cvm' and vrf != 0:
+    if config["switch_type"] != 'xpliant' and vrf != 0:
             match.oxm_list.append(ofp.oxm.exp2ByteValue(ofp.oxm.OFDPA_EXP_TYPE_VRF, vrf))
 
     match.oxm_list.append(ofp.oxm.ipv4_dst_masked(dst_ip, mask))
@@ -1194,18 +1194,16 @@ def add_mpls_flow(ctrl, action_group_id=0x0, label=100 ,ethertype=0x0800, bos=1,
 
     return request
 
-def cvm_add_mpls_flow(ctrl, action_group_id=0x0, label=100 ,ethertype=0x0800, bos=1, vrf=1, goto_table=27, send_barrier=False):
+def xpliant_add_mpls_flow(ctrl, action_group_id=0x0, label=100 ,ethertype=0x0800, bos=1, vrf=1, goto_table=27, send_barrier=False):
     match = ofp.match()
     match.oxm_list.append(ofp.oxm.eth_type(0x8847))
     match.oxm_list.append(ofp.oxm.mpls_label(label))
-    # match.oxm_list.append(ofp.oxm.mpls_bos(bos))
 
     apply_actions = []
     apply_actions.append(ofp.action.group(action_group_id))
     apply_actions.append(ofp.action.dec_mpls_ttl())
     if (goto_table != 29):
         apply_actions.append(ofp.action.pop_mpls(ethertype))
-        #apply_actions.append(ofp.action.copy_ttl_in())
 
     request = ofp.message.flow_add(
             table_id=24,
